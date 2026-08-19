@@ -1,28 +1,56 @@
 <?php
+
+//bootstrap and theme styles
 add_action( 'wp_enqueue_scripts', function() {
-	// Parent-Stylesheet laden (falls du es brauchst)
+	$child_dir = get_stylesheet_directory();
+	$child_uri = get_stylesheet_directory_uri();
+
+	$parent_dir = get_template_directory();
+	$parent_uri = get_template_directory_uri();
+
+	// Bootstrap CSS aus dem Child Theme.
+	wp_enqueue_style(
+		'bootstrap',
+		$child_uri . '/assets/bootstrap/css/bootstrap.min.css',
+		array(),
+		filemtime( $child_dir . '/assets/bootstrap/css/bootstrap.min.css' )
+	);
+
+	// Parent Stylesheet.
 	wp_enqueue_style(
 		'twentytwentyfive-parent-style',
-		get_template_directory_uri() . '/style.css',
+		$parent_uri . '/style.css',
 		array(),
 		wp_get_theme( 'twentytwentyfive' )->get( 'Version' )
 	);
 
-	// Child-Stylesheet laden
+	// Child Stylesheet.
 	wp_enqueue_style(
 		'twentytwentyfive-child-style',
-		get_stylesheet_directory_uri() . '/style.css',
-		array( 'twentytwentyfive-parent-style' ),
-		wp_get_theme()->get( 'Version' )
+		$child_uri . '/style.css',
+		array( 'bootstrap', 'twentytwentyfive-parent-style' ),
+		filemtime( $child_dir . '/style.css' )
 	);
-	// Child-Stylesheet für woo commerce elemente
+
+	// WooCommerce / Product Styles.
 	wp_enqueue_style(
 		'rbf-woo-style',
-		get_stylesheet_directory_uri() . '/woo-style.css',
-		array( 'twentytwentyfive-parent-style' ),
-		wp_get_theme()->get( 'Version' )
+		$child_uri . '/woo-style.css',
+		array( 'twentytwentyfive-child-style' ),
+		filemtime( $child_dir . '/woo-style.css' )
 	);
-} );
+
+	// Bootstrap JS inkl. Popper.
+	wp_enqueue_script(
+		'bootstrap',
+		$child_uri . '/assets/bootstrap/js/bootstrap.bundle.min.js',
+		array(),
+		filemtime( $child_dir . '/assets/bootstrap/js/bootstrap.bundle.min.js' ),
+		true
+	);
+}, 20 );
+
+
 
 
 
@@ -40,6 +68,33 @@ function rot_gutenberg_css(){
 add_action( 'after_setup_theme', 'rot_gutenberg_css' );
 
 
+
+//remove autop from shortcode calls
+add_filter( 'pre_render_block', function( $pre_render, $parsed_block ) {
+
+	if ( 'core/shortcode' !== $parsed_block['blockName'] ) {
+		return $pre_render;
+	}
+
+	return do_shortcode( $parsed_block['innerHTML'] );
+
+}, 10, 2 );
+
+
+
+
+
+//INCLUDES
+//INCLUDES
+//INCLUDES
+//INCLUDES
+//INCLUDES
+require_once get_stylesheet_directory() . '/includes/rot-core-helpers.php';
+require_once get_stylesheet_directory() . '/includes/class-rbf-theme-shortcodes.php';
+
+add_action( 'init', function() {
+	Rbf_Theme_Shortcodes::instance();
+} );
 
 
 
@@ -71,3 +126,63 @@ add_filter('site_icon_meta_tags', function($meta_tags) {
 	return [];
 }, 999);
 
+
+
+
+
+
+
+
+
+
+
+
+//METAS
+//METAS
+//METAS
+//METAS
+//METAS
+
+//obj_pos für attchments
+function rbf_register_attachment_meta() {
+	register_post_meta(
+		'attachment',
+		'obj_pos',
+		[
+			'type'              => 'string',
+			'single'            => true,
+			'show_in_rest'      => true,
+			'sanitize_callback' => 'sanitize_text_field',
+		]
+	);
+}
+add_action( 'init', 'rbf_register_attachment_meta' );
+
+
+function rbf_attachment_fields_to_edit( $form_fields, $post ) {
+	$obj_pos = get_post_meta( $post->ID, 'obj_pos', true );
+
+	$form_fields['obj_pos'] = [
+		'label' => 'Object Position',
+		'input' => 'text',
+		'value' => $obj_pos,
+		'helps' => 'CSS object-position, z. B. center center, 50% 30%, left top',
+	];
+
+	return $form_fields;
+}
+add_filter( 'attachment_fields_to_edit', 'rbf_attachment_fields_to_edit', 10, 2 );
+
+
+function rbf_attachment_fields_to_save( $post, $attachment ) {
+	if ( isset( $attachment['obj_pos'] ) ) {
+		update_post_meta(
+			$post['ID'],
+			'obj_pos',
+			sanitize_text_field( $attachment['obj_pos'] )
+		);
+	}
+
+	return $post;
+}
+add_filter( 'attachment_fields_to_save', 'rbf_attachment_fields_to_save', 10, 2 );
