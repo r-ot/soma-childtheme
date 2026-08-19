@@ -1,0 +1,126 @@
+/*
+Theme Name: Twenty Twenty-Five Child
+Template: twentytwentyfive
+Version: 1.0
+*/
+
+
+:root {
+	--wp--style--global--content-size: 720px;
+	--primary:#04ff9f;
+	--primary-dark:#3a4e47;
+	--primary-light:#b0d1ab;
+	--text:#1d1d1d;
+	--dark-grey:#353535;
+	--white:#f5f2f2;
+	--options-gap:6px;
+	--option-fontsize: 1rem;
+	--option-padding:7px;
+
+
+}
+body *{
+	box-sizing:border-box;
+}
+@media(min-width:1200px){
+	:root{
+		--wp--style--global--content-size: 1080px;
+	}
+}
+@media(min-width:1440px){
+	:root{
+		--wp--style--global--content-size: 1200px;
+	}
+}
+@media(min-width:1600px){
+	:root{
+		--wp--style--global--content-size: 1440px;
+	}
+}
+
+/* ===== RBF Fullscreen Swiper Page – Quick Header Fix ===== */
+/* ===== RBF Fullscreen Swiper Page – Quick Header + Admin Bar Fix ===== */
+:root{
+	--header-height: 85px;
+	--admin-bar-height: 0px;
+}
+
+/* WP Admin Bar heights */
+body{
+	--admin-bar-height-sticky:var(--admin-bar-height);
+}
+body.admin-bar{
+	--admin-bar-height: 32px;
+}
+@media (max-width: 782px){
+	body.admin-bar{
+		--admin-bar-height: 46px;
+	}
+}
+@media (max-width: 600px){
+	body.admin-bar{
+		--admin-bar-height-sticky:0px;
+	}
+}
+/* Optional: weniger Overscroll-Zirkus */
+body.page-template-fullscreen-swiper-page{
+	overscroll-behavior: none;
+}
+
+/* Header fixed + Höhe, unter Admin Bar */
+body.page-template-fullscreen-swiper-page header.wp-block-template-part,
+body.page-template-fullscreen-swiper-page header{
+	position: fixed;
+	top: var(--admin-bar-height);
+	left: 0;
+	right: 0;
+	height: var(--header-height);
+	z-index: 999999;
+}
+
+/* Content beginnt unter Admin Bar + Header */
+body.page-template-fullscreen-swiper-page #rbf_content.rbf-fullscreen {
+    padding-top: calc(0px + var(--header-height));
+    min-height: 100vh;
+    overflow: hidden;
+    margin-top: 0;
+}
+
+/* Slider bekommt genau die verbleibende Höhe */
+body.page-template-fullscreen-swiper-page #rbf_content.rbf-fullscreen .rbf-fullscreen-swiper{
+	height: calc(100vh - var(--admin-bar-height) - var(--header-height));
+}
+
+/* Menü: nicht umbrechen, horizontal scrollen */
+body.page-template-fullscreen-swiper-page header nav{
+	height: 100%;
+}
+
+body.page-template-fullscreen-swiper-page header nav ul{
+	display: flex;
+	flex-wrap: nowrap !important;
+	white-space: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: thin;
+}
+
+body.page-template-fullscreen-swiper-page header nav ul > li{
+	flex: 0 0 auto;
+}
+
+body.page-template-fullscreen-swiper-page header nav ul > li > a{
+	white-space: nowrap;
+}
+
+
+
+
+
+.masthead{
+	position: sticky;
+    top: var(--admin-bar-height-sticky);
+    background: white;
+    z-index: 4;
+}

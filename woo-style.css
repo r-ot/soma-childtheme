@@ -1,0 +1,88 @@
+body .wc-block-mini-cart__badge {
+    font-size: 0.65em;
+    top: -0.1em;
+    z-index: 10;
+    margin-left: -42%;
+    background: var(--grey,#bbb);
+}
+
+body .rbf-mini-cart-display-count {
+    font-size: 0.7em;
+    top: -0.1em;
+    z-index: 10;
+    margin-left: -42%;
+    align-items: center;
+    border-radius: 1em;
+    box-sizing: border-box;
+    display: flex;
+    font-size: .9em;
+    font-weight: 600;
+    height: 1.4285714286em;
+    justify-content: center;
+    left: 100%;
+    margin-left: -40%;
+    min-width: 1.4285714286em;
+    padding: 0 .25em;
+    position: absolute;
+    transform: translate(20%, 20%);
+    white-space: nowrap;
+    z-index: 11;
+    background: var(--primary);
+}
+
+
+
+
+body .rbf-btn{
+    padding: 2px 10px;
+    font-size: 1rem;border:none;
+    border-radius: 4px;
+    background:var(--primary);
+}
+
+
+
+body .rbf-btn.rbf-modal-close{
+    font-size:2.4rem;
+    line-height:.6;
+}
+
+body .is-hidden,
+body .rbf-conf-cart-shell.is-hidden{
+	display:none;
+}
+body .rbf-conf-cart-shell.is-open{
+	display:block;
+}
+body .rbf-conf-cart-shell {
+    --modal-margin: .2rem;
+    margin-left: var(--modal-margin, 1rem)!important;
+    margin-right: var(--modal-margin, 1rem)!important;
+    margin-top: var(--modal-margin, 1rem);
+    margin-bottom: var(--modal-margin, 1rem);
+    padding: calc(var(--modal-margin) * 1.5);
+    position: fixed;
+    top: var(--admin-bar-height);
+    background: #00000085;
+    width: calc(100% - (2 * var(--modal-margin, 1rem)));
+    max-width: calc(100% - (2 * var(--modal-margin, 1rem)));
+    left: 0;
+    z-index: 100000;
+    max-height: calc(100vh - var(--admin-bar-height) - 2 * var(--modal-margin));
+    gap:.2rem;
+}
+body .rbf-conf-cart-shell .shell-inner {
+    position: relative;
+    max-height: calc(100%);
+    height: calc(100vh - 2 * var(--modal-margin) - 2 * 3rem - var(--admin-bar-height));
+    overflow: auto;
+}
+@media(min-width:992px){
+    body .rbf-conf-cart-shell {
+    --modal-margin: 1rem;
+    }
+}
+
+.rbf-conf-edit-set-btn{
+    margin-top:10px;
+}

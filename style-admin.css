@@ -1,0 +1,32 @@
+.wp-ui-notification,
+.bg-red{
+    background:rgb(202, 17, 85)!important;
+}
+.wp-ui-notification a:hover,
+.bg-red a:hover{
+    background:rgb(133, 12, 56)!important;
+}
+
+
+
+.acf-repeater[data-orig_name="sections"]>table>tbody>.acf-row:nth-child(odd)>td.acf-fields,
+.acf-repeater[data-orig_name="sections"]>table>tbody>.acf-row:nth-child(odd)>td.acf-fields.-left{
+    background: #0091c32e;
+}
+.acf-repeater[data-orig_name="sections"]>table>tbody>.acf-row:nth-child(odd)>td.acf-fields .acf-fields,
+.acf-repeater[data-orig_name="sections"]>table>tbody>.acf-row:nth-child(odd)>td.acf-fields.-left .acf-fields{
+    background: rgba(255, 255, 255, 0.4);
+}
+.acf-repeater[data-orig_name="sections"]>table>tbody>.acf-row:nth-child(odd)>td.acf-fields.-left>.acf-field:before{
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.acf-field-repeater[data-name="termine"]{display:none;}
+
+
+body.wp-admin .button-primary.already-sent{
+	background:rgb(107, 151, 4);
+}
+body.wp-admin .button-primary.already-sent:hover{
+	background:rgb(98, 138, 5);
+}
