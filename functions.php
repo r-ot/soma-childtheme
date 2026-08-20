@@ -48,6 +48,20 @@ add_action( 'wp_enqueue_scripts', function() {
 		filemtime( $child_dir . '/assets/bootstrap/js/bootstrap.bundle.min.js' ),
 		true
 	);
+
+
+	//product families endpoint call
+	//MOVED TO PLUGIN RBF_SITE_CORE
+	//MOVED TO PLUGIN RBF_SITE_CORE
+	//MOVED TO PLUGIN RBF_SITE_CORE
+	//MOVED TO PLUGIN RBF_SITE_CORE
+	// wp_enqueue_script(
+	// 	'rbf-product-families',
+	// 	$child_uri . '/assets/js/product-families.js',
+	// 	[],
+	// 	filemtime( $child_dir . '/assets/js/product-families.js' ),
+	// 	true
+	// );
 }, 20 );
 
 
@@ -91,6 +105,7 @@ add_filter( 'pre_render_block', function( $pre_render, $parsed_block ) {
 //INCLUDES
 require_once get_stylesheet_directory() . '/includes/rot-core-helpers.php';
 require_once get_stylesheet_directory() . '/includes/class-rbf-theme-shortcodes.php';
+require_once get_stylesheet_directory() . '/rbf_filters.php';
 
 add_action( 'init', function() {
 	Rbf_Theme_Shortcodes::instance();
