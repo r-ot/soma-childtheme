@@ -13,6 +13,12 @@ defined('ABSPATH') || exit;
 				</div>
 			</div>
 
+			<div class="rbf-product-family-item__brand">
+				<img
+					src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/logos/veriga.svg'); ?>"
+					alt="Veriga"
+				>
+			</div>
 			<div class="rbf-product-family-item__content">
 
 				<h3 class="rbf-product-family-item__title" data-rbf-family-title></h3>

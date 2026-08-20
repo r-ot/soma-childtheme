@@ -432,6 +432,7 @@ body .rbf-conf-cart-shell .shell-inner {
 	line-height: 1.1;
 	font-weight: 700;
 	text-transform: uppercase;
+	hyphens:auto;
 }
 
 
@@ -531,5 +532,178 @@ body .rbf-conf-cart-shell .shell-inner {
 		background: rgba(255, 255, 255, 0.32);
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
+	}
+}
+
+
+
+
+
+
+/* ==========================================================================
+   Product Family Cards
+   ========================================================================== */
+
+.rbf-product-families {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 2rem;
+	width: 100%;
+}
+
+.rbf-product-family-item {
+	min-width: 0;
+	margin: 0;
+}
+
+.rbf-product-family-item__link {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	color: inherit;
+	text-decoration: none;
+}
+
+.rbf-product-family-item__image {
+	position: relative;
+	aspect-ratio: 1.15 / 1;
+	overflow: hidden;
+}
+
+.rbf-product-family-item__image-placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	background: #f2f2f2;
+	color: #aaa;
+	font-size: .8rem;
+	text-transform: uppercase;
+}
+
+.rbf-product-family-item__content {
+	flex: 1;
+	padding: 1rem 1.1rem 1.4rem;
+	background: #fff;
+	box-shadow: 0 8px 22px rgba(0, 0, 0, .06);
+}
+
+.rbf-product-family-item__title {
+	margin: 0 0 .7rem;
+	color: #3c3c4a;
+	font-size: clamp(1.45rem, 2vw, 2rem);
+	font-weight: 700;
+	line-height: 1.05;
+	letter-spacing: .01em;
+	text-transform: uppercase;
+}
+
+.rbf-product-family-item__strengths {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .25rem;
+	margin-bottom: .55rem;
+}
+
+.rbf-product-family-item__strength {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.75rem;
+	height: 1.75rem;
+	padding: 0 .35rem;
+	background: #2d3065;
+	color: #fff;
+	font-size: .9rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.rbf-product-family-item__strengths::after {
+	content: '';
+	flex: 0 0 100%;
+	height: 2px;
+	margin-top: .25rem;
+	background:
+		linear-gradient(
+			to right,
+			#e3bd21 0,
+			#e3bd21 4.4rem,
+			transparent 4.4rem,
+			transparent 100%
+		);
+}
+
+.rbf-product-family-item__strengths-label {
+	margin: 0;
+	color: #60606a;
+	font-size: .78rem;
+	line-height: 1.35;
+}
+
+.rbf-product-family-item__strengths-label span {
+	color: #363643;
+	font-weight: 600;
+	text-decoration: underline;
+}
+
+
+.rbf-product-family-item__brand {
+    position: relative;
+    z-index: 2;
+    width: fit-content;
+    margin-top: -1.9rem;
+    margin-left: 0.4rem;
+    margin-bottom: .5rem;
+    padding: 0.1rem .8rem;
+    border-radius: 11px 11px 0 0;
+    background: white;
+}
+
+.rbf-product-family-item__brand img {
+	display: block;
+	width: auto;
+	height: 1.8rem;
+	max-width: 7rem;
+}
+
+
+
+
+@media (max-width: 1100px) {
+
+	.rbf-product-families {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+@media (max-width: 900px) {
+
+	.rbf-product-families {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 480px) {
+
+	.rbf-product-families {
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
+	}
+}
+
+
+
+@media (min-width: 1800px) {
+
+	.rbf-product-families {
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 2100px) {
+
+	.rbf-product-families {
+		grid-template-columns: repeat(6, minmax(0, 1fr));
 	}
 }

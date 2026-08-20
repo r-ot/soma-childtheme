@@ -10,3 +10,7 @@
 - Product-Family-Template-Override ergänzt
 - `rbf_filters.php` ergänzt
 - Grundlage für dynamische Product-Family-Cards geschaffen
+
+## 0.1.1
+
+-styling product family items

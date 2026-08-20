@@ -30,4 +30,4 @@ rbf_filters.php
 
 ## Version
 
-Aktuell: 0.1.0
+Aktuell: 0.1.1
