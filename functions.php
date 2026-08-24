@@ -106,6 +106,7 @@ add_filter( 'pre_render_block', function( $pre_render, $parsed_block ) {
 require_once get_stylesheet_directory() . '/includes/rot-core-helpers.php';
 require_once get_stylesheet_directory() . '/includes/class-rbf-theme-shortcodes.php';
 require_once get_stylesheet_directory() . '/rbf_filters.php';
+require_once get_stylesheet_directory() . '/rbf-debug.php';
 
 add_action( 'init', function() {
 	Rbf_Theme_Shortcodes::instance();

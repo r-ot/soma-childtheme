@@ -58,6 +58,37 @@ final class Rbf_Theme_Shortcodes {
 					)
 				);
 
+			case 'product-family':
+				$term = get_queried_object();
+				if (
+					!$term instanceof WP_Term
+					|| !class_exists('RbfSiteCoreDataKeys')
+					|| !class_exists('RbfSiteCoreProducts')
+				) {
+					return '';
+				}
+				$taxonomy = RbfSiteCoreDataKeys::get_taxonomy_key(
+					RbfSiteCoreDataKeys::TAXONOMY_PRODUCT_FAMILY
+				);
+				if ($taxonomy === '' || $term->taxonomy !== $taxonomy) {
+					return '';
+				}
+				$dimensions = RbfSiteCoreProducts::get_attribute_options_by_term(
+					RbfSiteCoreDataKeys::TAXONOMY_PRODUCT_FAMILY,
+					(int) $term->term_id,
+					RbfSiteCoreDataKeys::ATTRIBUTE_TIRE_DIMENSION
+				);
+
+				return $this->render_hero_template(
+					[
+						'case'       => 'product-family',
+						'title'      => $term->name,
+						'text'       => $term->description,
+						'dimensions' => $dimensions,
+						'usps'       => [],
+					]
+				);
+
 			default:
 				return '<!--shortcode_hero-->';
 		}

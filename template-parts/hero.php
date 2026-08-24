@@ -39,6 +39,7 @@ $defaults = array(
 			'title' => 'menschlich',
 		],
 	],
+	'dimensions' => [],
 );
 
 $hero = wp_parse_args( $args, $defaults );
@@ -86,6 +87,36 @@ if ( ! empty( $hero['title'] ) ) {
 if ( ! empty( $hero['text'] ) ) {
 	$output_inner_content .= '<div class="rbf-hero__text">' . wp_kses_post( $hero['text'] ) . '</div>';
 }
+//dimensions
+
+if ( ! empty( $hero['dimensions'] ) && is_array( $hero['dimensions'] ) ) {
+
+	$output_inner_content .=
+		'<div class="rbf-hero__dimensions">'.
+			'<div class="rbf-hero__dimensions-label">'.
+				esc_html__( 'Verfügbare Reifendimensionen', 'twentytwentyfive-child' ).
+			'</div>'.
+			'<div class="rbf-hero__dimensions-list">';
+
+	foreach ( $hero['dimensions'] as $dimension ) {
+
+		$dimension = trim( (string) $dimension );
+
+		if ( '' === $dimension ) {
+			continue;
+		}
+
+		$output_inner_content .=
+			'<span class="rbf-hero__dimension">'.
+				esc_html( $dimension ).
+			'</span>';
+	}
+
+	$output_inner_content .=
+			'</div>'.
+		'</div>';
+}
+
 //btn
 if ( ! empty( $hero['button_label'] ) && ! empty( $hero['button_url'] ) ) {
 	$output_inner_content .= '<a class="rbf-hero__button" href="' . esc_url( $hero['button_url'] ) . '">'.
@@ -99,8 +130,15 @@ $image_id = isset( $hero['image_id'] ) && is_numeric( $hero['image_id'] ) && (in
 	? (int) $hero['image_id']
 	: 0;
 
-if ( empty( $image_id ) && ! empty( $post_id ) ) {
-	$image_id = get_post_thumbnail_id( $post_id );
+// if ( empty( $image_id ) && ! empty( $post_id ) ) {
+// 	$image_id = get_post_thumbnail_id( $post_id );
+// }
+if ( empty( $image_id ) && empty( $post_id ) && is_singular() ) {
+	$queried_object_id = get_queried_object_id();
+
+	if ( is_int( $queried_object_id ) && $queried_object_id > 0 ) {
+		$image_id = get_post_thumbnail_id( $queried_object_id );
+	}
 }
 
 if ( empty( $image_id ) && empty( $post_id ) ) {

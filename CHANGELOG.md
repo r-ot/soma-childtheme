@@ -14,3 +14,13 @@
 ## 0.1.1
 
 -styling product family items
+
+
+## 0.2.0
+
+- Product-Family-Archive ergänzt
+- Product-Family-Datenlogik zentralisiert
+- `tire_dimension` und `chain_strength` als interne Aliases eingeführt
+- persistenter Family-Index mit Learn/Delete ergänzt
+- REST auf gelernte Family-Daten umgestellt
+- Auto-Learn für ungelernte Product Families ergänzt
