@@ -17,6 +17,7 @@ $defaults = array(
 	'button_url'   => '',
 	'image_id'     => 0,
 	'post_id' => 0,
+	'xr_manifest' => '',
 	// 'usps' => [],
 	//testweise
 	'usps' => [
@@ -39,7 +40,8 @@ $defaults = array(
 			'title' => 'menschlich',
 		],
 	],
-	'dimensions' => [],
+	// 'dimensions' => [],
+	'dimensions_endpoint' => '',
 );
 
 $hero = wp_parse_args( $args, $defaults );
@@ -88,34 +90,47 @@ if ( ! empty( $hero['text'] ) ) {
 	$output_inner_content .= '<div class="rbf-hero__text">' . wp_kses_post( $hero['text'] ) . '</div>';
 }
 //dimensions
-
-if ( ! empty( $hero['dimensions'] ) && is_array( $hero['dimensions'] ) ) {
+// if ( ! empty( $hero['dimensions'] ) && is_array( $hero['dimensions'] ) ) {
+// 	$output_inner_content .=
+// 		'<div class="rbf-hero__dimensions">'.
+// 			'<div class="rbf-hero__dimensions-label">'.
+// 				esc_html__( 'Verfügbare Reifendimensionen', 'twentytwentyfive-child' ).
+// 			'</div>'.
+// 			'<div class="rbf-hero__dimensions-list">';
+// 	foreach ( $hero['dimensions'] as $dimension ) {
+// 		$dimension = trim( (string) $dimension );
+// 		if ( '' === $dimension ) {
+// 			continue;
+// 		}
+// 		$output_inner_content .=
+// 			'<span class="rbf-hero__dimension">'.
+// 				esc_html( $dimension ).
+// 			'</span>';
+// 	}
+// 	$output_inner_content .=
+// 			'</div>'.
+// 		'</div>';
+// }
+if ( ! empty( $hero['dimensions_endpoint'] ) ) {
 
 	$output_inner_content .=
-		'<div class="rbf-hero__dimensions">'.
+		'<div class="rbf-hero__dimensions" data-rbf-family-dimensions data-endpoint="' . esc_url( $hero['dimensions_endpoint'] ) . '" data-visible-count="3">'.
 			'<div class="rbf-hero__dimensions-label">'.
 				esc_html__( 'Verfügbare Reifendimensionen', 'twentytwentyfive-child' ).
 			'</div>'.
-			'<div class="rbf-hero__dimensions-list">';
 
-	foreach ( $hero['dimensions'] as $dimension ) {
+			'<div class="rbf-hero__dimensions-list" data-rbf-family-dimensions-list>'.
 
-		$dimension = trim( (string) $dimension );
+				'<template data-rbf-family-dimension-template>'.
+					'<span class="rbf-hero__dimension" data-rbf-family-dimension-item></span>'.
+				'</template>'.
 
-		if ( '' === $dimension ) {
-			continue;
-		}
+				'<button class="rbf-hero__dimensions-toggle" type="button" hidden data-rbf-family-dimensions-toggle data-collapsed-text="…" data-expanded-text="–" data-label-expand="' . esc_attr__( 'Weitere Reifendimensionen anzeigen', 'twentytwentyfive-child' ) . '" data-label-collapse="' . esc_attr__( 'Reifendimensionen reduzieren', 'twentytwentyfive-child' ) . '" aria-expanded="false" aria-label="' . esc_attr__( 'Weitere Reifendimensionen anzeigen', 'twentytwentyfive-child' ) . '">…</button>'.
 
-		$output_inner_content .=
-			'<span class="rbf-hero__dimension">'.
-				esc_html( $dimension ).
-			'</span>';
-	}
-
-	$output_inner_content .=
 			'</div>'.
 		'</div>';
 }
+
 
 //btn
 if ( ! empty( $hero['button_label'] ) && ! empty( $hero['button_url'] ) ) {
@@ -172,6 +187,22 @@ if ( ! empty( $image_id ) ) {
 		'</figure>';
 }
 
+$output_product_media_content='';
+if ( ! empty( $hero['xr_manifest'] ) ) {
+
+	$output_product_media_content .=
+		'<div class="rbf-hero__xr-viewer" data-rbf-xr-viewer data-manifest="' . esc_url( $hero['xr_manifest'] ) . '">'.
+			'<img class="rbf-hero__xr-image" data-rbf-xr-image src="" alt="" draggable="false" />';
+
+			if ( is_user_logged_in() ) {
+				$output_product_media_content .=
+					'<div class="rbf-hero__xr-status" data-rbf-xr-status>360°-Ansicht wird geladen …</div>';
+			}
+
+			$output_product_media_content .=
+		'</div>';
+}
+
 
 
 // $output =
@@ -206,6 +237,7 @@ $output =
 				'<div class="rbf-hero__content">'.
 					$output_inner_content.
 				'</div>'.
+				$output_product_media_content.
 			'</div>'.
 
 		'</div>'.

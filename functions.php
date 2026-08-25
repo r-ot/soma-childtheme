@@ -16,6 +16,14 @@ add_action( 'wp_enqueue_scripts', function() {
 		filemtime( $child_dir . '/assets/bootstrap/css/bootstrap.min.css' )
 	);
 
+	//fonts
+	wp_enqueue_style(
+		'rbf-fonts',
+		$child_uri . '/assets/fonts/fonts.css',
+		[],
+		filemtime($child_dir . '/assets/fonts/fonts.css')
+	);
+
 	// Parent Stylesheet.
 	wp_enqueue_style(
 		'twentytwentyfive-parent-style',
@@ -28,7 +36,10 @@ add_action( 'wp_enqueue_scripts', function() {
 	wp_enqueue_style(
 		'twentytwentyfive-child-style',
 		$child_uri . '/style.css',
-		array( 'bootstrap', 'twentytwentyfive-parent-style' ),
+		array(  'bootstrap',
+				'twentytwentyfive-parent-style',
+				'rbf-fonts',
+		),
 		filemtime( $child_dir . '/style.css' )
 	);
 
@@ -40,6 +51,7 @@ add_action( 'wp_enqueue_scripts', function() {
 		filemtime( $child_dir . '/woo-style.css' )
 	);
 
+
 	// Bootstrap JS inkl. Popper.
 	wp_enqueue_script(
 		'bootstrap',
@@ -48,6 +60,8 @@ add_action( 'wp_enqueue_scripts', function() {
 		filemtime( $child_dir . '/assets/bootstrap/js/bootstrap.bundle.min.js' ),
 		true
 	);
+
+
 
 
 	//product families endpoint call

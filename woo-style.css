@@ -164,7 +164,8 @@ body .rbf-conf-cart-shell .shell-inner {
 .rbf-hero {
 	--rbf-hero-height: 760px;
 	--rbf-hero-content-width: 38%;
-	--rbf-hero-cut-factor:16%;
+	--rbf-hero-cut-ratio: 0.16;
+	--rbf-hero-cut-factor: calc(var(--rbf-hero-cut-ratio) * 100%);
 	--rbf-hero-cut-left-top: 7%;
 	--rbf-hero-cut-top: 56%;
 	--rbf-hero-cut-bottom: calc(var(--rbf-hero-cut-top) - var(--rbf-hero-cut-factor));
@@ -246,21 +247,59 @@ body .rbf-conf-cart-shell .shell-inner {
    White content shape
    ========================================================================== */
 
+
+
+body{
+	--rbf-hero-cut-offset-start: 0%;
+	--rbf-hero-cut-offset-end: 0%;
+	--rbf-hero-cut-offset-bottom-end: 0%;
+	--rbf-hero-cut-offset-bottom-start: 0%;
+}
+
+body.archive{
+	--rbf-hero-cut-offset-start: 0%;
+	--rbf-hero-cut-offset-end: 17%;
+	--rbf-hero-cut-offset-bottom-end: 17%;
+	--rbf-hero-cut-offset-bottom-start: 0%;
+
+	--rbf-hero-gradient-angle: calc(
+		90deg + atan2(
+			calc(var(--rbf-hero-cut-ratio) * 100vw),
+			var(--rbf-hero-height)
+		)
+	);
+}
+
 .rbf-hero__stage::before {
     content: '';
     position: absolute;
     inset: 0;
     z-index: 1;
     background: var(--rbf-hero-bg);
-    clip-path: polygon(
-		var(--rbf-hero-cut-left-top) 0,
-		var(--rbf-hero-cut-top) 0,
-		var(--rbf-hero-cut-bottom) 100%,
-		var(--rbf-hero-cut-left-bottom) 100%
+	clip-path: polygon(
+		calc(var(--rbf-hero-cut-left-top) + var(--rbf-hero-cut-offset-start,0%)) 0,
+		calc(var(--rbf-hero-cut-top) + var(--rbf-hero-cut-offset-end,0%)) 0,
+		calc(var(--rbf-hero-cut-bottom) + var(--rbf-hero-cut-offset-bottom-end,0%)) 100%,
+		calc(var(--rbf-hero-cut-left-bottom) + var(--rbf-hero-cut-offset-bottom-start,0%)) 100%
 	);
 }
 
-
+body.archive .rbf-hero__stage{
+	background-image: url(assets/imgs/riffle.webp);
+    background-size: cover;
+    background-position: center;
+}
+body.archive .rbf-hero__stage::before {
+    background: #FFF;
+    background: linear-gradient(
+  104deg,
+  rgba(255, 255, 255, 1) 0%,
+  rgba(255, 255, 255, 1) 40%,
+  rgba(255, 255, 255, 0) 51%,
+  rgba(255, 255, 255, 0) 74%,
+  rgba(255, 255, 255, 1) 74%,
+  rgba(255, 255, 255, 1) 100%);
+}
 
 
 /* ==========================================================================
@@ -281,33 +320,47 @@ body .rbf-conf-cart-shell .shell-inner {
 	inset: 0;
 	background: var(--rbf-hero-overlay-light);
 }
+
+body .rbf-hero__overlay::before{
+	--rbf-hero-cut-offset-start:0%;
+	--rbf-hero-cut-offset-end:6%;
+	--rbf-hero-cut-offset-bottom-end:6%;
+	--rbf-hero-cut-offset-bottom-start:0%;
+}
+body.archive .rbf-hero__overlay::before {
+    --rbf-hero-cut-offset-start: 24%;
+    --rbf-hero-cut-offset-end: 37%;
+    --rbf-hero-cut-offset-bottom-end: 37%;
+    --rbf-hero-cut-offset-bottom-start: 24%;
+}
+
 .rbf-hero__overlay::before {
 	clip-path: polygon(
-		56% 0,
-		64% 0,
-		48% 100%,
-		40% 100%
-	);
-	clip-path: polygon(
-		var(--rbf-hero-cut-top) 0,
-		calc(var(--rbf-hero-cut-top) + 6%) 0,
-		calc(var(--rbf-hero-cut-bottom) + 6%) 100%,
-		var(--rbf-hero-cut-bottom) 100%
+		calc(var(--rbf-hero-cut-top) + var(--rbf-hero-cut-offset-start,0%)) 0,
+		calc(var(--rbf-hero-cut-top) + var(--rbf-hero-cut-offset-end,0%)) 0,
+		calc(var(--rbf-hero-cut-bottom) + var(--rbf-hero-cut-offset-bottom-end,0%)) 100%,
+		calc(var(--rbf-hero-cut-bottom) + var(--rbf-hero-cut-offset-bottom-start,0%)) 100%
 	);
 }
 
+body .rbf-hero__overlay::after{
+	--rbf-hero-cut-offset-start:0%;
+	--rbf-hero-cut-offset-end:12%;
+	--rbf-hero-cut-offset-bottom-end:12%;
+	--rbf-hero-cut-offset-bottom-start:0%;
+}
+body.archive .rbf-hero__overlay::after {
+    --rbf-hero-cut-offset-start: 30%;
+    --rbf-hero-cut-offset-end: 37%;
+    --rbf-hero-cut-offset-bottom-end: 37%;
+    --rbf-hero-cut-offset-bottom-start: 30%;
+}
 .rbf-hero__overlay::after {
-    clip-path: polygon(
-		56% 0,
-		69% 0,
-		53% 100%,
-		40% 100%
-	);
 	clip-path: polygon(
-		var(--rbf-hero-cut-top) 0,
-		calc(var(--rbf-hero-cut-top) + 11%) 0,
-		calc(var(--rbf-hero-cut-bottom) + 11%) 100%,
-		var(--rbf-hero-cut-bottom) 100%
+		calc(var(--rbf-hero-cut-top) + var(--rbf-hero-cut-offset-start,0%)) 0,
+		calc(var(--rbf-hero-cut-top) + var(--rbf-hero-cut-offset-end,0%)) 0,
+		calc(var(--rbf-hero-cut-bottom) + var(--rbf-hero-cut-offset-bottom-end,0%)) 100%,
+		calc(var(--rbf-hero-cut-bottom) + var(--rbf-hero-cut-offset-bottom-start,0%)) 100%
 	);
 }
 
@@ -705,5 +758,158 @@ body .rbf-conf-cart-shell .shell-inner {
 
 	.rbf-product-families {
 		grid-template-columns: repeat(6, minmax(0, 1fr));
+	}
+}
+
+
+
+
+
+/* ==========================================================================
+Product Family Hero – Dimensions
+   ========================================================================== */
+
+
+.rbf-hero--product-family .rbf-hero__dimensions {
+	margin-top: 1rem;
+	max-width: 36rem;
+}
+
+.rbf-hero--product-family .rbf-hero__dimensions-label {
+	margin-bottom: 0.35rem;
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+
+.rbf-hero--product-family .rbf-hero__dimensions-list {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.25rem 0.65rem;
+}
+
+.rbf-hero--product-family .rbf-hero__dimension {
+	font-size: 0.95rem;
+	font-weight: 700;
+	line-height: 1.3;
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+	white-space: nowrap;
+}
+
+.rbf-hero--product-family .rbf-hero__dimensions-toggle {
+	appearance: none;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-size: 1.1rem;
+	font-weight: 800;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.rbf-hero--product-family .rbf-hero__dimensions-toggle:hover,
+.rbf-hero--product-family .rbf-hero__dimensions-toggle:focus-visible {
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
+@media (min-width: 768px) {
+
+	.rbf-hero--product-family .rbf-hero__dimensions {
+		margin-top: 1.25rem;
+	}
+
+	.rbf-hero--product-family .rbf-hero__dimensions-label {
+		font-size: 0.85rem;
+	}
+
+	.rbf-hero--product-family .rbf-hero__dimension {
+		font-size: 1rem;
+	}
+}
+
+
+/* XR Viewer */
+
+.rbf-hero__xr-viewer {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	touch-action: none;
+	user-select: none;
+	cursor: grab;
+}
+
+.rbf-hero__xr-viewer.is-dragging {
+	cursor: grabbing;
+}
+
+.rbf-hero__xr-viewer::after {
+	content: '';
+	position: absolute;
+	left: 46%;
+	bottom: 9%;
+	width: min(70%, 32rem);
+	height: min(10%, 4.5rem);
+	transform: translateX(-50%);
+	border-radius: 50%;
+	background: radial-gradient(
+		ellipse at center,
+		rgba(0, 0, 0, 0.55) 0%,
+		rgba(0, 0, 0, 0.78) 42%,
+		rgba(0, 0, 0, 0.14) 58%,
+		rgba(0, 0, 0, 0) 75%
+	);
+	filter: blur(18px);
+	pointer-events: none;
+	z-index: 0;
+}
+
+.rbf-hero__xr-image {
+	position: relative;
+	z-index: 1;
+	display: block;
+	width: min(92%, 38rem);
+	max-width: 100%;
+	max-height: 88%;
+	height: auto;
+	object-fit: contain;
+	-webkit-user-drag: none;
+	user-select: none;
+	filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.14));
+}
+
+@media (min-width: 768px) {
+
+	.rbf-hero__xr-viewer::after {
+		bottom: 16%;
+		width: min(62%, 34rem);
+		height: min(9%, 5rem);
+		filter: blur(22px);
+	}
+
+	.rbf-hero__xr-image {
+		width: min(88%, 42rem);
+		max-height: 90%;
+		filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.16));
+	}
+}
+
+@media (min-width: 1200px) {
+
+	.rbf-hero__xr-viewer::after {
+		bottom: 16%;
+		width: min(58%, 36rem);
+		height: min(8%, 5.5rem);
+	}
+
+	.rbf-hero__xr-image {
+		width: min(84%, 46rem);
 	}
 }

@@ -1,288 +1,195 @@
 # Twenty Twenty-Five Child
 
-RBF WooCommerce Child Theme auf Basis von Twenty Twenty-Five für das SOMA B2B-Schneeketten-Projekt.
+Child Theme für das SOMA WooCommerce B2B-Projekt auf Basis von Twenty Twenty-Five.
 
-## Fokus
-
-* Custom Frontpage
-* WooCommerce-Frontend
-* Product-Family Landingpage
-* Product-Family Taxonomy Archive
-* wiederverwendbares Hero-System
-* dynamische Product-Family-Komponenten
-* Darstellung über native HTML-`<template>`-Elemente
-* klare Trennung zwischen Datenlogik und Präsentation
+Aktuelle Version: `0.3.0`
 
 ## Architektur
 
-Grundsatz:
+Grundsätzliche Trennung:
 
-* **WooCommerce / WordPress** = Source of Truth für Produkt- und Taxonomie-Daten
-* **`rbf-site-core`** = Datenlogik, Aggregationen, REST, funktionale Komponenten
-* **Child Theme** = Darstellung, Templates, CSS und projektspezifische Overrides
+- **WooCommerce / WordPress** = Produkt- und Taxonomie-Daten
+- **rbf-site-core** = Datenlogik, Aggregationen, REST und funktionale Komponenten
+- **rbf-xr-viewer** = XR-/360°-Viewer und XR-Asset-Auflösung
+- **Child Theme** = Templates, Markup, CSS und Darstellung
 
-Das Theme soll keine eigene WooCommerce-Datenlogik implementieren, wenn diese sinnvoll im Core gekapselt werden kann.
+Block-/FSE-Templates dienen hauptsächlich der Seitenstruktur.
 
-Block-Theme-/FSE-Templates dienen primär der Verdrahtung.
+Businesslogik und größere Datenabfragen gehören nicht ins Theme.
 
-Businesslogik und Queries laufen weiterhin über PHP-Controller, Shortcodes und generische Core-Klassen.
+## Theme-Struktur
 
----
+    twentytwentyfive-child/
+    ├── functions.php
+    ├── rbf_filters.php
+    ├── rbf-debug.php
+    ├── style.css
+    ├── woo-style.css
+    ├── theme.json
+    ├── includes/
+    │   ├── class-rbf-theme-shortcodes.php
+    │   └── rot-core-helpers.php
+    ├── template-parts/
+    │   ├── hero.php
+    │   └── product-family-item.php
+    └── templates/
+        ├── front-page.html
+        ├── fullscreen-swiper-page.html
+        └── taxonomy-product_family.html
 
-## Product-Family Landingpage
+`rbf-debug.php` ist ausschließlich für Development-/Reality-Checks vorgesehen
+und wird nur bei aktivem `WP_DEBUG` geladen.
 
-Die bestehende Landingpage-Komponente verwendet:
+## Fonts
 
-```text
-[rbf_product_families]
-        ↓
-rbf-site-core REST
-        ↓
-JSON
-        ↓
-Plugin-JavaScript
-        ↓
-natives HTML <template>
-        ↓
-Childtheme-Override
-```
+Die Schriftfamilie `Jost` wird lokal aus:
 
-Das Theme überschreibt das Default-Template des Plugins über:
+    assets/fonts/
 
-```text
-template-parts/product-family-item.php
-```
+geladen.
 
-Der Filter dafür liegt in:
+Variable Fonts werden über:
 
-```text
-rbf_filters.php
-```
+    assets/fonts/fonts.css
 
-Das Plugin-JavaScript arbeitet nur mit `data-*`-Hooks. CSS-Klassen und visuelles Markup bleiben damit vollständig im Theme.
-
----
-
-## Product-Family Archive
-
-Für die Taxonomie:
-
-```text
-product_family
-```
-
-existiert ein eigenes Block-Theme-Template:
-
-```text
-templates/taxonomy-product_family.html
-```
-
-Aktueller Aufbau:
-
-```text
-Header
-↓
-[rbf_hero case="product-family"]
-↓
-Main / Product-Grid-Bereich
-↓
-Footer
-```
-
-Damit wird der vorherige Twenty-Twenty-Five-/WordPress-Fallback-Archive-Flow vollständig ersetzt.
-
-Das Archive rendert nicht mehr automatisch den normalen Post-/Product-Content-Loop.
-
-### Hero
-
-Das vorhandene Hero-System wird wiederverwendet:
-
-```text
-[rbf_hero case="product-family"]
-        ↓
-Rbf_Theme_Shortcodes
-        ↓
-template-parts/hero.php
-```
-
-Der Product-Family-Case verwendet aktuell:
-
-* aktuellen Term-Namen
-* Term-Beschreibung
-* Product-Family-spezifische Daten
-
-Es wird bewusst kein separates Product-Family-Hero-System gebaut.
-
-Das Hero-Template bleibt generisch und bekommt fertige Daten vom Controller.
-
-### Reifendimensionen
-
-Die Reifendimensionen werden fachlich über den internen Alias:
-
-```text
-tire_dimension
-```
-
-angesprochen.
-
-Der aktuell dahinterliegende WooCommerce-Testdaten-Key lautet:
-
-```text
-tire_dimension_fit
-```
-
-Dieser externe Key soll im Theme nicht verwendet werden.
-
-Die persistente Aggregation und das Mapping gehören zu `rbf-site-core`.
-
-Der Archive-Hero ist aktuell grundsätzlich verdrahtet. Die Darstellung der aggregierten Reifendimensionen wird als nächster Schritt auf einen asynchronen REST-Flow umgestellt, damit der initiale Seitenrender auch bei Product Families mit mehreren hundert Produkten nicht blockiert wird.
-
-Geplante UX:
-
-```text
-erste 3 Dimensionen sichtbar
-↓
-…
-↓
-weitere Dimensionen auf Klick ein-/ausblenden
-```
-
----
+registriert.
 
 ## Hero-System
 
-Die Frontpage verwendet:
+Die Hero-Ausgabe läuft zentral über:
 
-```text
-[rbf_hero case="frontpage"]
-```
+    [rbf_hero]
 
-Product-Family-Archive verwenden:
+Aktuelle Cases:
 
-```text
-[rbf_hero case="product-family"]
-```
+    frontpage
+    product-family
 
-Das System ist bewusst für weitere Fälle vorbereitet, unter anderem spätere Product-Single-Seiten.
+Renderer:
 
-Kleine projektspezifische Anpassungen können über Filter in:
+    includes/class-rbf-theme-shortcodes.php
+        ↓
+    template-parts/hero.php
 
-```text
-rbf_filters.php
-```
+Das Hero-Template bleibt möglichst generisch und erhält vorbereitete Daten vom
+jeweiligen Controller.
 
-erfolgen.
+## Product-Family Landingpage
 
-Größere Hero-Cases bleiben im PHP-Controller.
+Die Landingpage verwendet:
 
----
+    [rbf_product_families]
+        ↓
+    rbf-site-core REST
+        ↓
+    Plugin-JavaScript
+        ↓
+    natives HTML <template>
+        ↓
+    Childtheme-Override
 
-## Aktuelle Theme-Struktur
+Das Theme-Template liegt unter:
 
-```text
-twentytwentyfive-child/
-├── functions.php
-├── rbf_filters.php
-├── rbf-debug.php
-├── README.md
-├── CHANGELOG.md
-├── style.css
-├── woo-style.css
-├── theme.json
-├── includes/
-│   ├── class-rbf-theme-shortcodes.php
-│   └── rot-core-helpers.php
-├── template-parts/
-│   ├── hero.php
-│   └── product-family-item.php
-└── templates/
-    ├── front-page.html
-    ├── fullscreen-swiper-page.html
-    └── taxonomy-product_family.html
-```
+    template-parts/product-family-item.php
 
-`rbf-debug.php` dient ausschließlich kontrollierten Entwicklungs-/Reality-Checks und wird nur bei aktivem `WP_DEBUG` verwendet.
+Die Zuordnung erfolgt über `rbf_filters.php`.
 
----
+Funktionale JavaScript-Hooks verwenden `data-*`-Attribute.
+CSS-Klassen bleiben Teil der Präsentationsschicht.
+
+## Product-Family Archive
+
+Eigenes FSE-Template:
+
+    templates/taxonomy-product_family.html
+
+Grundstruktur:
+
+    Header
+        ↓
+    Product-Family Hero
+        ↓
+    Product Grid
+        ↓
+    Footer
+
+Der normale Twenty-Twenty-Five-/WooCommerce-Fallback-Loop wird hier nicht
+verwendet.
+
+### Hero
+
+Der Product-Family-Hero enthält aktuell:
+
+- Term-Name
+- Term-Beschreibung
+- asynchron geladene Reifendimensionen
+- zunächst drei sichtbare Dimensionen
+- Expand/Collapse für weitere Dimensionen
+- optionalen XR-/360°-Viewer
+
+Die Datenlogik für Reifendimensionen liegt in `rbf-site-core`.
+
+### XR Viewer
+
+Ist für eine Product Family ein XR-Datensatz vorhanden, liefert
+`rbf-xr-viewer` die Manifest-URL.
+
+Das Theme ist ausschließlich verantwortlich für:
+
+- Platzierung in der Hero-Stage
+- Größe
+- Schatten
+- visuelle Integration
+- späteren Fallback auf ein normales Produktbild
+
+Viewer-JavaScript und XR-Asset-Verwaltung gehören nicht ins Theme.
 
 ## Product Cards
 
-Das Product-Family Archive soll künftig ein echtes Product Grid verwenden.
+Als nächster größerer Archive-Baustein folgt ein wiederverwendbares Product Grid
+mit eigenen Product Cards.
 
-Es wird ausdrücklich nicht versucht, das normale WooCommerce-/Single-Product-Markup per CSS auf Card-Größe zu reduzieren.
+Die Card-Daten kommen aus WooCommerce bzw. `rbf-site-core`.
 
-Geplant ist eine wiederverwendbare Product Card mit ungefähr:
+Die Darstellung bleibt im Childtheme.
 
-```text
-Product Card
-├── Bild
-├── Name
-├── Gliederstärke
-├── Verfügbarkeit
-├── relevante Reifendimensionen / Kurzinfos
-├── Preis
-└── Details / spätere B2B-Aktion
-```
+## CSS
 
-Die Präsentation gehört ins Theme.
+Projektbezogene WooCommerce- und Frontend-Styles liegen hauptsächlich in:
 
-Die Datenlogik bleibt im Core bzw. WooCommerce.
+    woo-style.css
 
----
+Neue responsive Komponenten werden mobile-first aufgebaut:
+
+    Basis = Mobile
+    @media (min-width: ...)
+        → größere Viewports
+
+Bestehende ältere Styles können davon abweichen und werden nur bei Bedarf
+refaktoriert.
 
 ## Roadmap
 
-### 1. Product-Family Landingpage
+- [x] Product-Family Landingpage
+- [x] eigenes Product-Family Archive
+- [x] Product-Family Hero
+- [x] asynchrone Reifendimensionen
+- [x] Expand/Collapse der Dimensionen
+- [x] XR-/360°-Viewer im Hero
+- [x] lokale Jost-Schrift
+- [ ] Product Grid
+- [ ] wiederverwendbare Product Cards
+- [ ] Product Single
+- [ ] interaktive Dimensionsfilter
+- [ ] Fallback-Medium bei fehlendem XR
 
-* [x] Product-Family Cards
-* [x] REST + JSON
-* [x] natives HTML-`<template>`
-* [x] Plugin-JavaScript
-* [x] Childtheme-Override
-* [x] Gliederstärken
-* [x] Self-Healing für noch nicht gelernte Family-Daten
+## Abhängigkeiten
 
-### 2. Product-Family Archive
+Das Theme arbeitet aktuell insbesondere mit:
 
-* [x] eigenes `taxonomy-product_family.html`
-* [x] Parent-/Fallback-Archive ersetzen
-* [x] bestehenden Hero wiederverwenden
-* [x] Term-Name und Term-Beschreibung
-* [x] Datenbasis für aggregierte Reifendimensionen
-* [ ] Reifendimensionen im Hero asynchron laden
-* [ ] 3 Dimensionen + Expand-UX
-* [ ] Product Grid
-* [ ] wiederverwendbare Product Cards
-* [ ] Styling/Figma-Finish
+- WooCommerce
+- `rbf-site-core`
+- `rbf-xr-viewer`
 
-### 3. Product Single
-
-Danach als separates Modul:
-
-* eigener Produktkopf / Hero
-* Bildergalerie
-* Preis
-* Gliederstärke
-* Verfügbarkeit
-* passende Reifendimensionen
-* Anwendungen / Icons
-* B2B-Anfrage- bzw. Warenkorb-Flow
-
-### 4. Interaktive Suche / Filter
-
-Später:
-
-* gewählte Reifendimension berücksichtigen
-* Product Families nach Dimension einschränken
-* Product Grid dynamisch filtern
-* REST für interaktive Zustände verwenden
-
----
-
-## Version
-
-Aktuell:
-
-```text
-0.2.0
-```
+Die Plugins besitzen die funktionale bzw. datenbezogene Logik.
+Das Theme übernimmt deren visuelle Darstellung.

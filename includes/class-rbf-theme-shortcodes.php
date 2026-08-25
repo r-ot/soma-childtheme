@@ -60,32 +60,53 @@ final class Rbf_Theme_Shortcodes {
 
 			case 'product-family':
 				$term = get_queried_object();
+
 				if (
 					!$term instanceof WP_Term
 					|| !class_exists('RbfSiteCoreDataKeys')
-					|| !class_exists('RbfSiteCoreProducts')
 				) {
 					return '';
 				}
+
 				$taxonomy = RbfSiteCoreDataKeys::get_taxonomy_key(
 					RbfSiteCoreDataKeys::TAXONOMY_PRODUCT_FAMILY
 				);
+
 				if ($taxonomy === '' || $term->taxonomy !== $taxonomy) {
 					return '';
 				}
-				$dimensions = RbfSiteCoreProducts::get_attribute_options_by_term(
-					RbfSiteCoreDataKeys::TAXONOMY_PRODUCT_FAMILY,
-					(int) $term->term_id,
-					RbfSiteCoreDataKeys::ATTRIBUTE_TIRE_DIMENSION
-				);
+
+
+
+				//viewer NEEDS term ID to find subdirectory in /uploads
+				$xr_manifest = '';
+
+				if ( class_exists( 'RbfXrViewer' ) ) {
+					$xr_manifest = RbfXrViewer::get_manifest_url( (int) $term->term_id );
+				}
+
+				if ($xr_manifest !== '') {
+					wp_enqueue_script( 'rbf-xr-viewer');
+				}
+
+
+				//_______________________________________
+
+
+
+				wp_enqueue_script('rbf-site-core-product-family-data');
 
 				return $this->render_hero_template(
 					[
-						'case'       => 'product-family',
-						'title'      => $term->name,
-						'text'       => $term->description,
-						'dimensions' => $dimensions,
-						'usps'       => [],
+						'case'                => 'product-family',
+						'title'               => $term->name,
+						'text'                => $term->description,
+						//neuen learn endpoint reichen wir auch durch bis ins template
+						'dimensions_endpoint' => rest_url(
+							'rbf-site-core/v1/product-families/' . (int) $term->term_id . '/learn'
+						),
+							'xr_manifest'         => $xr_manifest,
+						'usps'                => [],
 					]
 				);
 
