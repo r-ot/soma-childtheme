@@ -2,7 +2,7 @@
 
 Child Theme für das SOMA WooCommerce B2B-Projekt auf Basis von Twenty Twenty-Five.
 
-Aktuelle Version: `0.3.0`
+Aktuelle Version: `0.3.1`
 
 ## Architektur
 

@@ -6,47 +6,142 @@ if (!defined('WP_DEBUG') || !WP_DEBUG) {
 	return;
 }
 
-// add_action('wp', function() {
+// add_action('admin_footer', function() {
 
-// 	if (!is_tax('product_family')) {
+// 	if (!function_exists('wc_get_product')) {
 // 		return;
 // 	}
 
+// 	$screen = get_current_screen();
+
 // 	if (
-// 		!isset($_GET['rbf_family_rebuild'])
-// 		|| '1' !== sanitize_text_field(wp_unslash($_GET['rbf_family_rebuild']))
+// 		!$screen
+// 		|| $screen->post_type !== 'product'
+// 		|| $screen->base !== 'post'
 // 	) {
 // 		return;
 // 	}
 
-// 	if (!current_user_can('manage_options')) {
+// 	$product_id = isset($_GET['post']) ? (int) $_GET['post'] : 0;
+
+// 	if (!$product_id) {
 // 		return;
 // 	}
 
-// 	$term = get_queried_object();
+// 	$product = wc_get_product($product_id);
 
-// 	if (!$term instanceof WP_Term) {
+// 	if (!$product) {
 // 		return;
 // 	}
 
-// 	$rebuild = RbfSiteCoreFamilyIndex::rebuild($term->term_id);
+// 	$debug = [];
 
-// 	if (is_wp_error($rebuild)) {
-// 		do_action('qm/error', [
-// 			'rbf_debug' => 'family index rebuild failed',
-// 			'error'     => $rebuild->get_error_message(),
-// 		]);
+// 	foreach ($product->get_attributes() as $index => $attribute) {
 
+// 		$debug[] = [
+// 			'array_key'      => $index,
+// 			'name'           => $attribute->get_name(),
+// 			'sanitized_name' => sanitize_title($attribute->get_name()),
+// 			'id'             => $attribute->get_id(),
+// 			'is_taxonomy'    => $attribute->is_taxonomy(),
+// 			'options'        => $attribute->get_options(),
+// 		];
+// 	}
+
+// 	echo '<pre style="margin:20px;margin-left:180px;padding:20px;background:#242424;color:#7CFC00;font-family:monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;">';
+// 	echo esc_html(print_r($debug, true));
+// 	echo '</pre>';
+// });
+
+
+// add_action('admin_footer', function() {
+
+// 	if (
+// 		!class_exists('RbfSiteCoreDataKeys')
+// 		|| !class_exists('RbfSiteCoreProducts')
+// 	) {
 // 		return;
 // 	}
 
-// 	$stored_index = RbfSiteCoreFamilyIndex::get($term->term_id);
+// 	$screen = get_current_screen();
 
-// 	do_action('qm/debug', [
-// 		'rbf_debug' => 'family index rebuilt',
-// 		'term_id'   => $term->term_id,
-// 		'term_name' => $term->name,
-// 		'index'     => $stored_index,
-// 	]);
+// 	if (
+// 		!$screen
+// 		|| $screen->post_type !== 'product'
+// 		|| $screen->base !== 'post'
+// 	) {
+// 		return;
+// 	}
 
+// 	$product_id = isset($_GET['post']) ? (int) $_GET['post'] : 0;
+
+// 	if (!$product_id) {
+// 		return;
+// 	}
+
+// 	$debug = [
+// 		'matching_key' => RbfSiteCoreDataKeys::get_matching_attribute_key(
+// 			'dimension',
+// 			RbfSiteCoreDataKeys::ATTRIBUTE_TIRE_DIMENSION
+// 		),
+// 		'aggregated' => RbfSiteCoreProducts::get_attribute_options_by_products(
+// 			[$product_id],
+// 			[
+// 				RbfSiteCoreDataKeys::ATTRIBUTE_TIRE_DIMENSION,
+// 				RbfSiteCoreDataKeys::ATTRIBUTE_CHAIN_STRENGTH,
+// 			]
+// 		),
+// 	];
+
+// 	echo '<pre style="margin:20px;margin-left:180px;padding:20px;background:#242424;color:#7CFC00;font-family:monospace;font-size:12px;line-height:1.5;">';
+// 	echo esc_html(print_r($debug, true));
+// 	echo '</pre>';
+// });
+
+
+// add_action('admin_footer', function() {
+
+// 	if (
+// 		!class_exists('RbfSiteCoreDataKeys')
+// 		|| !class_exists('RbfSiteCoreProducts')
+// 	) {
+// 		return;
+// 	}
+
+// 	$screen = get_current_screen();
+
+// 	if (
+// 		!$screen
+// 		|| $screen->taxonomy !== 'product_family'
+// 		|| $screen->base !== 'term'
+// 	) {
+// 		return;
+// 	}
+
+// 	$term_id = isset($_GET['tag_ID']) ? (int) $_GET['tag_ID'] : 0;
+
+// 	if (!$term_id) {
+// 		return;
+// 	}
+
+// 	$product_ids = RbfSiteCoreProducts::get_ids_by_term(
+// 		RbfSiteCoreDataKeys::TAXONOMY_PRODUCT_FAMILY,
+// 		$term_id
+// 	);
+
+// 	$debug = [
+// 		'term_id' => $term_id,
+// 		'product_ids' => $product_ids,
+// 		'aggregated' => RbfSiteCoreProducts::get_attribute_options_by_products(
+// 			$product_ids,
+// 			[
+// 				RbfSiteCoreDataKeys::ATTRIBUTE_TIRE_DIMENSION,
+// 				RbfSiteCoreDataKeys::ATTRIBUTE_CHAIN_STRENGTH,
+// 			]
+// 		),
+// 	];
+
+// 	echo '<pre style="margin:20px; margin-left:180px;padding:20px;background:#242424;color:#7CFC00;font-family:monospace;font-size:12px;line-height:1.5;">';
+// 	echo esc_html(print_r($debug, true));
+// 	echo '</pre>';
 // });

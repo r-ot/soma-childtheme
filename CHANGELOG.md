@@ -33,3 +33,10 @@
 - XR-Darstellung und Schatten für die Hero-Stage ergänzt
 - lokale Schriftfamilie Jost eingebunden
 - XR-Funktionalität vollständig in `rbf-xr-viewer` ausgelagert
+
+
+## 0.3.1
+
+- Product-Family-Cards um Bilddarstellung ergänzt
+- XR-Startframe als Family-Card-Fallback integriert
+- Placeholder bleibt erhalten, wenn kein Family-Bild verfügbar ist

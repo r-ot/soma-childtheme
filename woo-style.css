@@ -913,3 +913,16 @@ Product Family Hero – Dimensions
 		width: min(84%, 46rem);
 	}
 }
+
+
+
+.rbf-product-family-item .rot-img-relative{
+	position:absolute;
+}
+.rbf-product-family-item .rot-img-relative img{
+    top: 0;
+    left: 75%;
+    width: 150%;
+    height: 150%;
+    transform: translate(-65%, 0%);
+}
