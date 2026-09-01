@@ -2,7 +2,7 @@
 
 Child Theme für das SOMA WooCommerce B2B-Projekt auf Basis von Twenty Twenty-Five.
 
-Aktuelle Version: `0.3.1`
+Aktuelle Version: `0.3.2`
 
 ## Architektur
 
@@ -48,11 +48,19 @@ Die Schriftfamilie `Jost` wird lokal aus:
 
 geladen.
 
-Variable Fonts werden über:
+Variable Fonts für das normale Frontend werden über:
 
     assets/fonts/fonts.css
 
 registriert.
+
+Für PDF-Dokumente werden zusätzlich statische TTF-Schnitte verwendet:
+
+    assets/fonts/static/Jost-Regular.ttf
+    assets/fonts/static/Jost-Bold.ttf
+
+Diese werden vom Plugin `rbf-shop-documents` über Dompdf registriert und
+in den PDF-Templates verwendet.
 
 ## Hero-System
 
@@ -168,6 +176,55 @@ Neue responsive Komponenten werden mobile-first aufgebaut:
 Bestehende ältere Styles können davon abweichen und werden nur bei Bedarf
 refaktoriert.
 
+
+## Shop Documents / Angebots-PDF
+
+PDF- und Dokumentenlogik liegt im separaten Plugin:
+
+    rbf-shop-documents
+
+Das Plugin übernimmt:
+
+- PDF-Erzeugung mit Dompdf
+- Dokumenten-/Angebotslogik
+- Datenaufbereitung
+- ein eigenes Fallback-PDF-Template
+
+Das Child Theme kann die visuelle PDF-Darstellung überschreiben.
+
+Aktueller Theme-Override:
+
+    rbf-shop-documents/pdf/quote.php
+
+Template-Auflösung:
+
+    Child Theme Override
+        ↓
+    Plugin Fallback
+        ↓
+    Dompdf
+
+Damit bleibt die Trennung bestehen:
+
+- `rbf-shop-documents` = PDF- und Dokumentenlogik
+- Child Theme = PDF-Markup, Typografie und visuelle Gestaltung
+
+Der aktuelle Stand ist ein Proof of Concept für Angebots-PDFs.
+
+Geplant sind später unter anderem:
+
+- Warenkorb als Angebotsgrundlage
+- Wiederverkäufer-spezifisches Logo und Absenderdaten
+- individuelle Akzent- und Buttonfarben
+- Angebotsnummern
+- Angebots-Snapshots
+- Gültigkeitszeiträume
+- Mehrseiten- und Sonderfallbehandlung
+
+
+
+
+
 ## Roadmap
 
 - [x] Product-Family Landingpage
@@ -190,6 +247,7 @@ Das Theme arbeitet aktuell insbesondere mit:
 - WooCommerce
 - `rbf-site-core`
 - `rbf-xr-viewer`
+- `rbf-shop-documents`
 
 Die Plugins besitzen die funktionale bzw. datenbezogene Logik.
 Das Theme übernimmt deren visuelle Darstellung.
