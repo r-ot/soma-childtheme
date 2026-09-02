@@ -40,3 +40,22 @@
 - Product-Family-Cards um Bilddarstellung ergänzt
 - XR-Startframe als Family-Card-Fallback integriert
 - Placeholder bleibt erhalten, wenn kein Family-Bild verfügbar ist
+
+## 0.3.2
+
+-prepared  templating for quotes pdf
+
+## 0.3.3
+
+PDF
+- improved pdf template for quotes pdf
+
+
+STYLE / header
+- Added reusable `compact` hero variant
+- Added automatic compact hero handling for WooCommerce Cart and Checkout
+- Added featured-image fallback for singular hero contexts
+- Added reusable hero breadcrumb context/helper
+- Suppressed duplicate WooCommerce Cart/Checkout post titles via `rbf_filters.php`
+- Added compact hero styling and diagonal media treatment
+- Documented WooCommerce block-template integration

@@ -2,7 +2,7 @@
 
 Child Theme für das SOMA WooCommerce B2B-Projekt auf Basis von Twenty Twenty-Five.
 
-Aktuelle Version: `0.3.2`
+Aktuelle Version: `0.3.3`
 
 ## Architektur
 
@@ -81,6 +81,53 @@ Renderer:
 
 Das Hero-Template bleibt möglichst generisch und erhält vorbereitete Daten vom
 jeweiligen Controller.
+
+
+### Compact Hero
+
+Der Case `compact` ist für reduzierte Display-Header auf System- und
+Content-Seiten vorgesehen.
+
+Aktuell wird er für WooCommerce Cart und Checkout verwendet. Der Hero übernimmt
+dort den Seitentitel als einzige H1 und wird vor dem eigentlichen
+`core/post-content` ausgegeben.
+
+Die WooCommerce-eigenen Block-Templates für Cart und Checkout bleiben dabei
+unangetastet.
+
+## Theme-Filter / WooCommerce-Integration
+
+Theme-seitige Render- und Integrationsfilter liegen zentral in:
+
+    rbf_filters.php
+
+Für Cart und Checkout rendert WooCommerce über seine Block-Templates zusätzlich
+einen `core/post-title` vor dem eigentlichen Seiteninhalt.
+
+Da der RBF Compact Hero den Seitentitel bereits als H1 ausgibt, wird dieser
+zusätzliche Post-Title gezielt über den dynamischen WordPress-Blockfilter
+unterdrückt:
+
+    render_block_core/post-title
+
+Der Filter greift ausschließlich bei:
+
+    is_cart()
+    is_checkout()
+
+Damit bleibt die Zuständigkeit klar getrennt:
+
+    WooCommerce
+        → besitzt weiterhin Cart-/Checkout-Block-Templates
+
+    Child Theme
+        → ergänzt den RBF Compact Hero
+        → verhindert dort einen doppelten Seitentitel / eine doppelte H1
+
+Es werden bewusst keine eigenen `page-cart.html`- oder
+`page-checkout.html`-Overrides benötigt.
+
+
 
 ## Product-Family Landingpage
 

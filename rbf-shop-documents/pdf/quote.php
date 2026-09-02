@@ -132,6 +132,22 @@ $font_filename = $font_regular_path ? basename($font_regular_path ) : 'not found
 
 	<h1><?php echo esc_html( $title ); ?></h1>
 
+
+	<?php if ( ! empty( $args['quote']['recipient'] ) ) : ?>
+
+		<?php $recipient = $args['quote']['recipient']; ?>
+
+		<h2>Empfänger</h2>
+
+		<p>
+			<?php echo esc_html( $recipient['company'] ); ?><br>
+			<?php echo esc_html( $recipient['first_name'] . ' ' . $recipient['last_name'] ); ?><br>
+			<?php echo esc_html( $recipient['address_1'] ); ?><br>
+			<?php echo esc_html( $recipient['postcode'] . ' ' . $recipient['city'] ); ?>
+		</p>
+
+	<?php endif; ?>
+
 	<?php if ( ! empty( $text ) ) : ?>
 		<p><?php echo esc_html( $text ); ?></p>
 	<?php endif; ?>

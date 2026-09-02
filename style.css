@@ -1,22 +1,26 @@
 /*
 Theme Name: Twenty Twenty-Five Child
 Template: twentytwentyfive
-Version: 0.3.2
+Version: 0.3.3
 Description: RBF WooCommerce Child Theme auf Basis von Twenty Twenty-Five. Custom Frontpage, WooCommerce-Frontend und dynamische Product-Family-Komponenten.
 Author: RBF
 */
 
 :root {
 	--wp--style--global--content-size: 720px;
-	--primary:#04ff9f;
+	--primary:#2B2F5E;
 	--primary-dark:#3a4e47;
-	--primary-light:#b0d1ab;
-	--text:#1d1d1d;
+	--primary-light:#383f87;
+	--text:#3D3D4B;
+	--bs-body-color:var(--text);
+	--text-light:#3c3c4d;
 	--dark-grey:#353535;
 	--white:#f5f2f2;
 	--options-gap:6px;
 	--option-fontsize: 1rem;
 	--option-padding:7px;
+
+	--secondary:#F8CA2F;
 
 	--sans: 'Jost', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
 	--serif:"Jost",var(--sans);

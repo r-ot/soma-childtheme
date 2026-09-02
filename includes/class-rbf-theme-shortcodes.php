@@ -110,6 +110,29 @@ final class Rbf_Theme_Shortcodes {
 					]
 				);
 
+
+			case 'compact':
+				$post_id = get_queried_object_id();
+
+				if ( ! $post_id || ! is_singular() ) {
+					return '';
+				}
+
+				$hero = [
+					'case'     => 'compact',
+					'title'    => get_the_title( $post_id ),
+					'text'     => '',
+					'post_id'  => $post_id,
+					'eyebrow'  => 'crumbs',
+					'usps'     => [],
+				];
+
+				$hero['breadcrumbs'] = $this->get_hero_breadcrumbs( $hero );
+
+				return $this->render_hero_template( $hero );
+
+
+
 			default:
 				return '<!--shortcode_hero-->';
 		}
@@ -129,6 +152,14 @@ final class Rbf_Theme_Shortcodes {
 	}
 
 	private function get_current_hero_case() {
+		if (
+			function_exists( 'is_cart' )&&
+			( is_cart() || is_checkout() )
+		) {
+			return 'compact';
+		}
+
+
 		if ( is_front_page() ) {
 			return 'frontpage';
 		}
@@ -152,5 +183,43 @@ final class Rbf_Theme_Shortcodes {
 		);
 
 		return ob_get_clean();
+	}
+
+
+	private function get_hero_breadcrumbs( array $hero ) {
+		$breadcrumbs = [];
+		$case = $hero['case'] ?? 'default';
+
+		switch ( $case ) {
+
+			case 'compact':
+
+				$post_id = isset( $hero['post_id'] )
+					? (int) $hero['post_id']
+					: 0;
+
+				if ( function_exists( 'wc_get_page_permalink' ) ) {
+
+					$shop_url = wc_get_page_permalink( 'shop' );
+
+					if ( ! empty( $shop_url ) ) {
+						$breadcrumbs[] = [
+							'label' => 'Shop',
+							'url'   => $shop_url,
+						];
+					}
+				}
+
+				if ( $post_id > 0 ) {
+					$breadcrumbs[] = [
+						'label' => get_the_title( $post_id ),
+						'url'   => '',
+					];
+				}
+
+				break;
+		}
+
+		return $breadcrumbs;
 	}
 }

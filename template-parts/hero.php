@@ -11,6 +11,7 @@ if ( ! isset( $args ) || ! is_array( $args ) ) {
 $defaults = array(
 	'case'         => 'default',
 	'eyebrow'      => '',
+	'breadcrumbs'  => '',
 	'title'        => '',
 	'text'         => '',
 	'button_label' => '',
@@ -18,6 +19,7 @@ $defaults = array(
 	'image_id'     => 0,
 	'post_id' => 0,
 	'xr_manifest' => '',
+	'variant' => '',
 	// 'usps' => [],
 	//testweise
 	'usps' => [
@@ -78,9 +80,56 @@ if ( ! empty( $hero['usps'] ) && is_array( $hero['usps'] ) ) {
 	}
 }
 //eybrow / crumbs
-if ( ! empty( $hero['eyebrow'] ) ) {
-	$output_inner_content .= '<div class="rbf-hero__eyebrow">' . esc_html( $hero['eyebrow'] ) . '</div>';
+//*eyebrow / crumbs*
+$eyebrow = $hero['eyebrow'] ?? '';
+
+if (
+	$eyebrow === 'crumbs'
+	&& ! empty( $hero['breadcrumbs'] )
+	&& is_array( $hero['breadcrumbs'] )
+) {
+
+	$output_inner_content .=
+		'<div class="rbf-hero__eyebrow">'.
+			'<i class="rbf-hero__eyebrow-mark" aria-hidden="true"></i>'.
+			'<nav class="rbf-hero__breadcrumbs" aria-label="Breadcrumb">';
+
+	foreach ( $hero['breadcrumbs'] as $index => $breadcrumb ) {
+
+		$label = $breadcrumb['label'] ?? '';
+		$url = $breadcrumb['url'] ?? '';
+
+		if ( $index > 0 ) {
+			$output_inner_content .=
+				'<span class="rbf-hero__breadcrumb-separator" aria-hidden="true">/</span>';
+		}
+
+		if ( ! empty( $url ) ) {
+			$output_inner_content .=
+				'<a href="' . esc_url( $url ) . '">'.
+					esc_html( $label ).
+				'</a>';
+		} else {
+			$output_inner_content .=
+				'<span>'.
+					esc_html( $label ).
+				'</span>';
+		}
+	}
+
+	$output_inner_content .=
+			'</nav>'.
+		'</div>';
+
+} elseif ( is_string( $eyebrow ) && trim( $eyebrow ) !== '' ) {
+
+	$output_inner_content .=
+		'<div class="rbf-hero__eyebrow">'.
+			esc_html( $eyebrow ).
+		'</div>';
 }
+
+
 //title
 if ( ! empty( $hero['title'] ) ) {
 	$output_inner_content .= '<h1 class="rbf-hero__title">' . esc_html( $hero['title'] ) . '</h1>';
@@ -145,9 +194,27 @@ $image_id = isset( $hero['image_id'] ) && is_numeric( $hero['image_id'] ) && (in
 	? (int) $hero['image_id']
 	: 0;
 
+
+// do_action('qm/debug', [
+// 	'hero_case'              => $hero['case'] ?? null,
+// 	'post_id'                => $post_id,
+// 	'image_id'               => $image_id,
+// 	'is_singular'            => is_singular(),
+// 	'queried_object_id'      => get_queried_object_id(),
+// 	'post_thumbnail_id'      => !empty($post_id) ? get_post_thumbnail_id($post_id) : null,
+// ]);
 // if ( empty( $image_id ) && ! empty( $post_id ) ) {
 // 	$image_id = get_post_thumbnail_id( $post_id );
 // }
+//product families brauchen hier andere logik daher haben wir diesen auskommentiert!!!
+
+//neu 0.3.3
+if ( empty( $image_id ) && ! empty( $post_id ) && is_singular() ) {
+	$image_id = get_post_thumbnail_id( $post_id );
+}
+
+
+
 if ( empty( $image_id ) && empty( $post_id ) && is_singular() ) {
 	$queried_object_id = get_queried_object_id();
 
@@ -205,25 +272,13 @@ if ( ! empty( $hero['xr_manifest'] ) ) {
 
 
 
-// $output =
-// 	'<section class="rbf-hero rbf-hero--' . esc_attr( $hero['case'] ) . '">'.
-// 		'<div class="rbf-hero__stage">'.
-// 			'<div class="rbf-hero__shape rbf-hero__shape--left"></div>'.
-// 			'<div class="rbf-hero__shape rbf-hero__shape--right"></div>'.
-// 			'<div class="rbf-hero__container container">'.
-// 				'<div class="rbf-hero__content">'.
-// 					$output_inner_content.
-// 				'</div>'.
-// 				'<div class="rbf-hero__media">'.
-// 					$output_media_content.
-// 				'</div>'.
-// 			'</div>'.
-// 		'</div>'.
-// 	'</section>';
+/*OUTPUT*/
+/*OUTPUT*/
+/*OUTPUT*/
+/*OUTPUT*/
 
-// echo $output;
 $output =
-	'<section class="rbf-hero rbf-hero--' . esc_attr( $hero['case'] ) . '">'.
+	'<section class="rbf-hero alignfull rbf-hero--' . esc_attr( $hero['case'] ) . '">'.
 
 		'<div class="rbf-hero__stage">'.
 
