@@ -2,6 +2,31 @@
 
 defined('ABSPATH') || exit;
 
+
+
+
+/**
+ * Temporary WordPress 7.1 compatibility workaround.
+ *
+ * WP 7.1 can fatal in the block editor while processing cross-origin
+ * resources through WP_HTML_Tag_Processor:
+ *
+ * "Cannot use output buffering in output buffering display handlers"
+ *
+ * Core ticket:
+ * https://core.trac.wordpress.org/ticket/65930
+ *
+ * Remove once the affected WordPress Core version has been updated
+ * and the issue is confirmed fixed.
+ */
+add_filter(
+	'wp_client_side_media_processing_enabled',
+	'__return_false'
+);
+
+
+
+
 add_filter('rbf_product_family_template', function($template) {
 
 	$theme_template = get_stylesheet_directory()

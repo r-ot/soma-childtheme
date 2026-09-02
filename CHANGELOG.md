@@ -59,3 +59,8 @@ STYLE / header
 - Suppressed duplicate WooCommerce Cart/Checkout post titles via `rbf_filters.php`
 - Added compact hero styling and diagonal media treatment
 - Documented WooCommerce block-template integration
+
+
+## 0.3.4
+
+- pached pdf/quote.php
