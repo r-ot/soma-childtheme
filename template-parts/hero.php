@@ -20,6 +20,7 @@ $defaults = array(
 	'post_id' => 0,
 	'xr_manifest' => '',
 	'variant' => '',
+	'cart_item_count'   => 0,
 	// 'usps' => [],
 	//testweise
 	'usps' => [
@@ -179,6 +180,28 @@ if ( ! empty( $hero['dimensions_endpoint'] ) ) {
 			'</div>'.
 		'</div>';
 }
+
+
+//*cart item count*
+
+if ( ! empty( $hero['cart_item_count'] ) ) {
+
+	$cart_item_count = (int) $hero['cart_item_count'];
+
+	$product_label = $cart_item_count === 1
+		? 'Produkt'
+		: 'Produkte';
+
+	$output_inner_content .=
+		'<div class="rbf-hero__cart-count" data-rbf-cart-count>'.
+			'<strong class="rbf-hero__cart-count-value">'.
+				'<span data-rbf-cart-count-value>' . esc_html( $cart_item_count ) . '</span> '.
+				'<span data-rbf-cart-count-product-label>' . esc_html( $product_label ) . '</span>'.
+			'</strong>'.
+			'<span class="rbf-hero__cart-count-label">im Warenkorb</span>'.
+		'</div>';
+}
+
 
 
 //btn

@@ -82,3 +82,44 @@ add_filter('render_block_core/post-title', function($block_content, $block) {
 	return $block_content;
 
 }, 10, 2);
+
+
+
+
+//LOGO in den header per hook
+add_filter('render_block_core/site-title', function($block_content, $block) {
+
+	if (! is_user_logged_in()) {
+		return $block_content;
+	}
+
+	if (! class_exists('RbfSiteCoreB2BBranding')) {
+		return $block_content;
+	}
+
+	$user_id = get_current_user_id();
+
+	$logo_markup = RbfSiteCoreB2BBranding::get_effective_logo_markup(
+		$user_id,
+		[
+			'class' => 'rbf-site-branding__logo',
+		]
+	);
+
+	if (! $logo_markup) {
+		return $block_content;
+	}
+
+	$html =
+		'<div class="wp-block-site-title rbf-site-branding">'.
+			'<a'.
+				' href="' . esc_url(home_url('/')) . '"'.
+				' rel="home"'.
+			'>'.
+				$logo_markup.
+			'</a>'.
+		'</div>';
+
+	return $html;
+
+}, 10, 2);

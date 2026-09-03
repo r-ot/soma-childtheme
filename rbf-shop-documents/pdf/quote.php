@@ -79,6 +79,43 @@ $recipient = ! empty( $quote['recipient'] ) && is_array( $quote['recipient'] )
 	: [];
 
 
+
+//branding and reseller name
+$branding = ! empty($args['branding']) && is_array($args['branding'])
+	? $args['branding']
+	: [];
+
+$reseller = ! empty($quote['reseller']) && is_array($quote['reseller'])
+	? $quote['reseller']
+	: [];
+
+$logo_src = ! empty($branding['logo_src'])
+	? $branding['logo_src']
+	: '';
+
+$reseller_name = trim(
+	($reseller['first_name'] ?? '') . ' ' .
+	($reseller['last_name'] ?? '')
+);
+
+$reseller_city = trim(
+	($reseller['postcode'] ?? '') . ' ' .
+	($reseller['city'] ?? '')
+);
+
+$recipient_name = trim(
+	($recipient['first_name'] ?? '') . ' ' .
+	($recipient['last_name'] ?? '')
+);
+
+$recipient_city = trim(
+	($recipient['postcode'] ?? '') . ' ' .
+	($recipient['city'] ?? '')
+);
+
+
+
+
 /*
  * Font debug
  */
@@ -222,7 +259,130 @@ if ( ! empty( $output_quote_item_rows ) ) {
 }
 
 
+
+
+
+
+$output_header_logo = '';
+
+if ($logo_src) {
+	$output_header_logo =
+		'<img'.
+			' class="rbf-quote-header__logo"'.
+			' src="' . esc_attr($logo_src) . '"'.
+			' alt=""'.
+		'>';
+}
+
+
+$output_reseller_address =
+	( ! empty($reseller['company'])
+		? '<strong>' . esc_html($reseller['company']) . '</strong><br>'
+		: ''
+	).
+	( $reseller_name
+		? esc_html($reseller_name) . '<br>'
+		: ''
+	).
+	( ! empty($reseller['address_1'])
+		? esc_html($reseller['address_1']) . '<br>'
+		: ''
+	).
+	( ! empty($reseller['address_2'])
+		? esc_html($reseller['address_2']) . '<br>'
+		: ''
+	).
+	( $reseller_city
+		? esc_html($reseller_city) . '<br>'
+		: ''
+	).
+	( ! empty($reseller['country'])
+		? esc_html($reseller['country'])
+		: ''
+	);
+
+$output_header =
+	'<table class="rbf-quote-header">'.
+		'<tr>'.
+			'<td class="rbf-quote-header__branding">'.
+				$output_header_logo.
+			'</td>'.
+
+			'<td class="rbf-quote-header__sender">'.
+				$output_reseller_address.
+			'</td>'.
+		'</tr>'.
+	'</table>';
+
+
+$output_sender_line = '';
+
+if (! empty($reseller['company']) || ! empty($reseller['address_1']) || $reseller_city) {
+	$output_sender_line =
+		'<div class="rbf-quote-recipient__sender-line">'.
+			esc_html(
+				implode(
+					' · ',
+					array_filter(
+						[
+							$reseller['company'] ?? '',
+							$reseller['address_1'] ?? '',
+							$reseller_city,
+						]
+					)
+				)
+			).
+		'</div>';
+}
+
+
+$output_recipient = '';
+
+if (! empty($recipient)) {
+	$output_recipient =
+		'<section class="rbf-quote-recipient">'.
+			$output_sender_line.
+
+			'<div class="rbf-quote-recipient__address">'.
+				( ! empty($recipient['company'])
+					? '<strong>' . esc_html($recipient['company']) . '</strong><br>'
+					: ''
+				).
+				( $recipient_name
+					? esc_html($recipient_name) . '<br>'
+					: ''
+				).
+				( ! empty($recipient['address_1'])
+					? esc_html($recipient['address_1']) . '<br>'
+					: ''
+				).
+				( ! empty($recipient['address_2'])
+					? esc_html($recipient['address_2']) . '<br>'
+					: ''
+				).
+				( $recipient_city
+					? esc_html($recipient_city) . '<br>'
+					: ''
+				).
+				( ! empty($recipient['country'])
+					? esc_html($recipient['country'])
+					: ''
+				).
+			'</div>'.
+		'</section>';
+}
+
+
+
+
 /*
+ * Final document
+ * Final document
+ * Final document
+ * Final document
+ * Final document
+ * Final document
+ * Final document
  * Final document
  */
 $html =
@@ -246,6 +406,76 @@ $html =
 					'font-weight: 700;'.
 					'src: url("' . esc_attr( $font_bold_uri ) . '") format("truetype");'.
 				'}'.
+
+
+				//new branding and reseller
+'				@page {
+					margin: 45px 55px 55px;
+				}
+
+				body {
+					margin: 0;
+				}
+
+				.rbf-quote-header {
+					width: 100%;
+					margin: 0 0 55px;
+					border-collapse: collapse;
+				}
+
+				.rbf-quote-header td {
+					padding: 0;
+					border: 0;
+					vertical-align: top;
+				}
+
+				.rbf-quote-header__branding {
+					width: 52%;
+				}
+
+				.rbf-quote-header__sender {
+					width: 48%;
+					text-align: right;
+					font-size: 10px;
+					line-height: 1.5;
+				}
+
+				.rbf-quote-header__logo {
+					display: block;
+					max-width: 220px;
+					max-height: 85px;
+					width: auto;
+					height: auto;
+				}
+
+				.rbf-quote-recipient {
+					width: 48%;
+					min-height: 115px;
+					margin-bottom: 45px;
+				}
+
+				.rbf-quote-recipient__sender-line {
+					margin-bottom: 12px;
+					padding-bottom: 3px;
+					border-bottom: 1px solid #aaa;
+					font-size: 7px;
+					white-space: nowrap;
+				}
+
+				.rbf-quote-recipient__address {
+					font-size: 11px;
+					line-height: 1.5;
+				}
+
+				.rbf-quote-document-title {
+					margin-bottom: 25px;
+				}
+
+				.rbf-quote-document-title h1 {
+					margin: 0;
+				}'.
+				//___________________
+
 
 				'body {'.
 					'font-family: "RBF Jost", sans-serif;'.
@@ -281,13 +511,17 @@ $html =
 			'</style>'.
 		'</head>'.
 
+
 		'<body>'.
-			$output_font_debug.
-			$output_dompdf_debug.
-
-			'<h1>' . esc_html( $title ) . '</h1>'.
-
+			// $output_font_debug.
+			// $output_dompdf_debug.
+			$output_header.
 			$output_recipient.
+
+			'<div class="rbf-quote-document-title">'.
+				'<h1>' . esc_html($title) . '</h1>'.
+			'</div>'.
+
 			$output_text.
 			$output_quote_items.
 		'</body>'.

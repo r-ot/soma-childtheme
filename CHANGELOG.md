@@ -64,3 +64,19 @@ STYLE / header
 ## 0.3.4
 
 - pached pdf/quote.php
+
+## 0.3.5
+
+- Added reusable compact hero variant for WooCommerce Cart and Checkout
+- Added automatic Cart / Checkout hero context detection
+- Added singular featured-image fallback for compact hero media
+- Added full-width compact hero integration without overriding WooCommerce block templates
+- Added reusable hero eyebrow / breadcrumb rendering with context-based breadcrumb helper
+- Added diagonal breadcrumb marker based on the existing hero cut geometry
+- Suppressed duplicate WooCommerce Cart / Checkout `core/post-title` output via `rbf_filters.php`
+- Added server-rendered WooCommerce cart item counter to the compact hero
+- Added live cart-counter synchronization through the WooCommerce Blocks cart data store
+- Added `assets/js/rbf-cart-header.js`
+- Refined compact hero diagonal media, overlay and background styling
+
+- site branding added (logo, upload in admin, b2b_haendler-logic)

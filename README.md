@@ -2,7 +2,7 @@
 
 Child Theme für das SOMA WooCommerce B2B-Projekt auf Basis von Twenty Twenty-Five.
 
-Aktuelle Version: `0.3.4`
+Aktuelle Version: `0.3.5`
 
 ## Architektur
 
@@ -26,6 +26,13 @@ Businesslogik und größere Datenabfragen gehören nicht ins Theme.
     ├── style.css
     ├── woo-style.css
     ├── theme.json
+	├── assets/
+	│   ├── bootstrap/
+	│   ├── imgs/
+	│   ├── fonts/
+	│   ├── logos/
+	│   └── js/
+	│       └── rbf-cart-header.js
     ├── includes/
     │   ├── class-rbf-theme-shortcodes.php
     │   └── rot-core-helpers.php
@@ -62,6 +69,23 @@ Für PDF-Dokumente werden zusätzlich statische TTF-Schnitte verwendet:
 Diese werden vom Plugin `rbf-shop-documents` über Dompdf registriert und
 in den PDF-Templates verwendet.
 
+
+## Header / Site Branding
+
+- Twenty Twenty-Five `core/site-title` wird dynamisch über `render_block_core/site-title` gefiltert (rbf_filters.php).
+- Kein Header-Template-Override notwendig.
+- Der Header verwendet nun den zentralen Branding-Contract aus `rbf-site-core`.
+- Logo-Auflösung:
+  - eingeloggter B2B-User mit Händlerlogo → Händlerlogo
+  - B2B-User ohne Händlerlogo → SOMA-Standardlogo
+  - Gast / normaler Admin → SOMA-Standardlogo
+  - kein globales oder individuelles Logo → originaler Twenty Twenty-Five Site Title
+- Das tatsächlich gerenderte Logo-Markup kommt vollständig aus `RbfSiteCoreB2BBranding`.
+- Styling und Größensteuerung bleiben bewusst auf Theme-Ebene.
+
+
+
+
 ## Hero-System
 
 Die Hero-Ausgabe läuft zentral über:
@@ -72,6 +96,7 @@ Aktuelle Cases:
 
     frontpage
     product-family
+    compact
 
 Renderer:
 
@@ -82,18 +107,127 @@ Renderer:
 Das Hero-Template bleibt möglichst generisch und erhält vorbereitete Daten vom
 jeweiligen Controller.
 
-
 ### Compact Hero
 
-Der Case `compact` ist für reduzierte Display-Header auf System- und
-Content-Seiten vorgesehen.
+Der Case `compact` stellt eine reduzierte Variante des bestehenden Hero-Systems
+für System- und Content-Seiten bereit.
 
-Aktuell wird er für WooCommerce Cart und Checkout verwendet. Der Hero übernimmt
-dort den Seitentitel als einzige H1 und wird vor dem eigentlichen
-`core/post-content` ausgegeben.
+Aktuell wird er für WooCommerce Cart und Checkout verwendet.
 
-Die WooCommerce-eigenen Block-Templates für Cart und Checkout bleiben dabei
-unangetastet.
+Der Compact Hero verwendet weiterhin dieselbe grundlegende Hero-Architektur:
+
+- Full-Width-Ausgabe über `alignfull`
+- Featured Image der aktuellen Seite als Hero-Medium
+- bestehende diagonale Cut-/Overlay-Geometrie
+- Riffelblech-Hintergrund
+- eigene kompaktere Höhen- und Layoutparameter
+- Seitentitel als H1 im Hero
+
+Cart und Checkout werden automatisch erkannt und benötigen keinen eigenen
+Shortcode-Case im WooCommerce-Template.
+
+Die WooCommerce-eigenen Block-Templates bleiben dabei unangetastet.
+
+### Hero Eyebrow / Breadcrumbs
+
+Der Hero-Parameter:
+
+    eyebrow
+
+unterstützt neben normalem Text auch den reservierten Wert:
+
+    crumbs
+
+Beispiel:
+
+    'eyebrow' => 'crumbs'
+
+In diesem Fall erzeugt der Hero-Controller kontextbezogene Breadcrumb-Daten und
+übergibt sie als strukturiertes Array an das Hero-Template.
+
+Die Breadcrumb-Ermittlung ist in:
+
+    Rbf_Theme_Shortcodes::get_hero_breadcrumbs()
+
+gekapselt.
+
+Der Helper erhält den vollständigen Hero-Context statt ausschließlich einer
+Post-ID. Dadurch kann die Breadcrumb-Logik später auch für kontextabhängige
+Cases wie Product Family Archives und Product Singles erweitert werden.
+
+Die visuelle Breadcrumb-Ausgabe enthält zusätzlich einen diagonalen Marker,
+dessen Neigung auf derselben Cut-Geometrie wie der Hero basiert.
+
+
+
+
+## WooCommerce Cart / Checkout
+
+WooCommerce behält seine eigenen Block-Templates für Cart und Checkout.
+
+Das Child Theme überschreibt diese Templates bewusst nicht.
+
+Stattdessen ergänzt das Theme die benötigte Präsentationslogik über bestehende
+WordPress-/WooCommerce-Schnittstellen.
+
+### Post Title
+
+WooCommerce rendert in seinen Cart-/Checkout-Templates einen eigenen
+`core/post-title`.
+
+Da der Compact Hero den Seitentitel bereits als H1 ausgibt, wird dieser
+zusätzliche Titel in:
+
+    rbf_filters.php
+
+über den dynamischen Block-Filter:
+
+    render_block_core/post-title
+
+für Cart und Checkout unterdrückt.
+
+Damit bleibt genau eine H1 im Dokument, ohne WooCommerce-eigene Templates zu
+kopieren oder zu überschreiben.
+
+### Cart Counter im Hero
+
+Der Compact Hero kann die aktuelle Anzahl der Produkte im Warenkorb anzeigen:
+
+    2 Produkte
+    im Warenkorb
+
+Beim initialen Seitenrender kommt die Anzahl serverseitig aus dem aktuellen
+WooCommerce Cart.
+
+Da der WooCommerce Cart Block Mengenänderungen und das Entfernen von Produkten
+asynchron verarbeitet, wird der Counter anschließend clientseitig mit dem
+WooCommerce Cart Data Store synchronisiert.
+
+Theme-JavaScript:
+
+    assets/js/rbf-cart-header.js
+
+Flow:
+
+    PHP Initial Render
+        ↓
+    WooCommerce Cart Store
+        ↓
+    Mengenänderung / Remove
+        ↓
+    itemsCount aktualisiert
+        ↓
+    Hero Counter aktualisiert sich ohne Reload
+
+Die funktionalen DOM-Hooks verwenden `data-rbf-*`-Attribute.
+
+Es werden keine eigenen AJAX-Requests und kein DOM-Polling benötigt.
+
+
+
+
+
+
 
 ## Theme-Filter / WooCommerce-Integration
 
@@ -267,6 +401,11 @@ Geplant sind später unter anderem:
 - Angebots-Snapshots
 - Gültigkeitszeiträume
 - Mehrseiten- und Sonderfallbehandlung
+
+
+
+
+
 
 
 

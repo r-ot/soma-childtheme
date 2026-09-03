@@ -61,6 +61,28 @@ add_action( 'wp_enqueue_scripts', function() {
 		true
 	);
 
+	//*RBF cart header live data*
+
+	if (
+		function_exists( 'is_cart' )
+		&& (
+			is_cart()
+			|| ( function_exists( 'is_checkout' ) && is_checkout() )
+		)
+	) {
+
+		wp_enqueue_script(
+			'rbf-cart-header',
+			$child_uri . '/assets/js/rbf-cart-header.js',
+			[
+				'wp-data',
+				'wc-blocks-data-store',
+			],
+			filemtime( $child_dir . '/assets/js/rbf-cart-header.js' ),
+			true
+		);
+	}
+
 
 
 

@@ -32,6 +32,7 @@ final class Rbf_Theme_Shortcodes {
 			array(
 				'case'      => '',
 				'post_type' => '',
+				'cart_item_count' => '',
 			),
 			$atts,
 			'rbf_hero'
@@ -118,12 +119,24 @@ final class Rbf_Theme_Shortcodes {
 					return '';
 				}
 
+				$cart_item_count = 0;
+
+				if (
+					function_exists( 'WC' )
+					&& WC()->cart
+				) {
+					$cart_item_count = WC()->cart->get_cart_contents_count();
+				}
+
+
 				$hero = [
 					'case'     => 'compact',
 					'title'    => get_the_title( $post_id ),
 					'text'     => '',
 					'post_id'  => $post_id,
 					'eyebrow'  => 'crumbs',
+					// 'cart_item_count' => true,
+					'cart_item_count' => $cart_item_count,
 					'usps'     => [],
 				];
 
